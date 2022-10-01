@@ -6,7 +6,7 @@ import sys
 import PySimpleGUI as sg
 from PySimpleGUI import Window
 
-from internal.static.assets import _layout
+from internal.static.assets._layout import LAYOUT
 
 
 class MainProcess:
@@ -16,7 +16,7 @@ class MainProcess:
     """
 
     def __init__(self) -> None:
-        self._window: Window = sg.Window("voify", _layout.LAYOUT)
+        self._window: Window = sg.Window("voify", LAYOUT)
 
     def run(self) -> None:
         """全ての処理を開始 (または終了) する:
