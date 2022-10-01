@@ -7,6 +7,11 @@ from PySimpleGUI import Window
 
 
 class MainProcess:
+    """メインプロセスのクラス:
+            - GUI 処理
+            - pip の管理
+    """
+
     def __init__(self) -> None:
         sg.theme("Dark Black")
 
@@ -18,6 +23,10 @@ class MainProcess:
         self._window: Window = sg.Window("voify", self._layout)
 
     def run(self) -> None:
+        """全ての処理を開始 (または終了) する:
+                - ウィンドウの表示
+                    - 入力されたデータの処理
+        """
         while True:
             event, values = self._window.read()  # type: ignore
 
