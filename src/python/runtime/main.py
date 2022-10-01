@@ -19,7 +19,7 @@ class MainProcess(object):
 
     def __init__(self) -> None:
         self._system: System = System()
-        self._window: Window = sg.Window("voify", LAYOUT)
+        self._window: Window = sg.Window("voify", LAYOUT, finalize=True)
 
         self._system._setup()
 
