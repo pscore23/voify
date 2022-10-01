@@ -1,22 +1,21 @@
 import gc
 import subprocess
 import sys
-from tkinter import SEL_FIRST
-from typing import NoReturn
 
 import PySimpleGUI as sg
+from PySimpleGUI import Window
 
 
 class MainProcess:
-    def __init__(self):
+    def __init__(self) -> None:
         sg.theme("Dark Black")
 
         # autopep8: off
-        self._layout = [
+        self._layout: list = [
             [[sg.Text(lib)] for lib in [name.split("==")[0] for name in subprocess.run("pip freeze", capture_output=True, text=True).stdout.split("\n")]]
         ]
         # autopep8: on
-        self._window = sg.Window("voify", self._layout)
+        self._window: Window = sg.Window("voify", self._layout)
 
     def run(self) -> None:
         while True:
