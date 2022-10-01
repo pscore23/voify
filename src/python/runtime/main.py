@@ -12,7 +12,7 @@ class MainProcess:
 
         # autopep8: off
         self._layout: list = [
-            [[sg.Text(lib)] for lib in [name.split("==")[0] for name in subprocess.run("pip freeze", capture_output=True, text=True).stdout.split("\n")]]
+            [[sg.Text(lib)] for lib in [name.split("==")[0] for name in subprocess.run("pip freeze", capture_output=True, text=True, check=True).stdout.split("\n")]]
         ]
         # autopep8: on
         self._window: Window = sg.Window("voify", self._layout)
@@ -29,6 +29,6 @@ class MainProcess:
 
 
 if __name__ == "__main__":
-    mp = MainProcess()
+    MP = MainProcess()
 
-    mp.run()
+    MP.run()
