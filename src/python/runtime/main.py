@@ -1,11 +1,12 @@
 from __future__ import absolute_import
 
 import gc
-import subprocess
 import sys
 
 import PySimpleGUI as sg
 from PySimpleGUI import Window
+
+from internal.static.assets import _layout
 
 
 class MainProcess:
@@ -15,14 +16,7 @@ class MainProcess:
     """
 
     def __init__(self) -> None:
-        sg.theme("Dark Black")
-
-        # autopep8: off
-        self._layout: list = [
-            [[sg.Text(lib)] for lib in [name.split("==")[0] for name in subprocess.run("pip freeze", capture_output=True, text=True, check=True).stdout.split("\n")]]
-        ]
-        # autopep8: on
-        self._window: Window = sg.Window("voify", self._layout)
+        self._window: Window = sg.Window("voify", _layout.LAYOUT)
 
     def run(self) -> None:
         """全ての処理を開始 (または終了) する:
