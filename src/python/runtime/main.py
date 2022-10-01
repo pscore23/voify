@@ -21,7 +21,7 @@ class MainProcess(object):
         self._system: System = System()
         self._window: Window = sg.Window("voify", LAYOUT, finalize=True)
 
-        self._system._setup()
+        self._system.setup()
 
     def run(self) -> None:
         """全ての処理を開始 (または終了) する:
@@ -40,24 +40,27 @@ class MainProcess(object):
             self._window.refresh()
 
         self._window.close()
-        self._system._cleanup()
+        self._system.cleanup()
         sys.exit()
 
 
 class System(object):
     @staticmethod
-    def _setup():
+    def setup():
+        """エンコーディング関係のセットアップを行う"""
         sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8")
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
     @staticmethod
-    def _cleanup():
+    def cleanup():
+        """クリーンアップを行う"""
         sys.stdout.flush()
         gc.collect()
 
     def restart(self):
-        self._cleanup()
+        """アプリケーションの再起動を行う"""
+        self.cleanup()
 
         os.execv(sys.executable, ["python"] + sys.argv)
 
