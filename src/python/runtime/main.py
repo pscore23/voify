@@ -5,6 +5,7 @@ import io
 import os
 import sys
 
+import psutil
 import PySimpleGUI as sg
 from PySimpleGUI import Window
 
@@ -34,7 +35,7 @@ class MainProcess:
             if event in (sg.WIN_CLOSED,):
                 break
 
-            if event == "-UPDATE-":
+            if event == "-RESTART-":
                 self._system.restart()
 
             self._window.refresh()
@@ -55,6 +56,18 @@ class _System:
     @staticmethod
     def cleanup():
         """クリーンアップを行う"""
+        process = psutil.Process(os.getpid())
+
+        try:
+            for f_handler in process.open_files():
+                os.close(f_handler.fd)
+
+            for c_handler in process.connections():
+                os.close(c_handler.fd)
+
+        except OSError:
+            pass
+
         sys.stdout.flush()
         gc.collect()
 
