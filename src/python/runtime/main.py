@@ -8,15 +8,15 @@ import sys
 try:
     import psutil
 
-except ModuleNotFoundError:
-    raise ModuleNotFoundError("psutil ライブラリが見つかりません")
+except ModuleNotFoundError as e:
+    raise ModuleNotFoundError("psutil ライブラリが見つかりません") from e
 
 try:
     import PySimpleGUI as sg
     from PySimpleGUI import Window
 
-except ModuleNotFoundError:
-    raise ModuleNotFoundError("PySimpleGUI ライブラリが見つかりません")
+except ModuleNotFoundError as e:
+    raise ModuleNotFoundError("PySimpleGUI ライブラリが見つかりません") from e
 
 from internal.static.assets._layout import LAYOUT
 
