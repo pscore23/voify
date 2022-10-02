@@ -5,9 +5,18 @@ import io
 import os
 import sys
 
-import psutil
-import PySimpleGUI as sg
-from PySimpleGUI import Window
+try:
+    import psutil
+
+except ModuleNotFoundError:
+    raise ModuleNotFoundError("psutil ライブラリが見つかりません")
+
+try:
+    import PySimpleGUI as sg
+    from PySimpleGUI import Window
+
+except ModuleNotFoundError:
+    raise ModuleNotFoundError("PySimpleGUI ライブラリが見つかりません")
 
 from internal.static.assets._layout import LAYOUT
 
@@ -46,6 +55,8 @@ class MainProcess:
 
 
 class _System:
+    """内部の処理で使われるクラス"""
+
     @staticmethod
     def setup():
         """エンコーディング関係の設定を行う"""
