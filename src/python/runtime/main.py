@@ -11,15 +11,15 @@ from PySimpleGUI import Window
 from internal.static.assets._layout import LAYOUT
 
 
-class MainProcess(object):
+class MainProcess:
     """メインプロセスのクラス:
             - GUI 処理
             - pip の管理
     """
 
     def __init__(self) -> None:
-        self._system: System = System()
-        self._window: Window = sg.Window("voify", LAYOUT, finalize=True)
+        self._system: _System = _System()
+        self._window: Window = sg.Window("voify", LAYOUT, size=(600, 500), resizable=True, finalize=True)
 
         self._system.setup()
 
@@ -44,10 +44,10 @@ class MainProcess(object):
         sys.exit()
 
 
-class System(object):
+class _System:
     @staticmethod
     def setup():
-        """エンコーディング関係のセットアップを行う"""
+        """エンコーディング関係の設定を行う"""
         sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8")
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
@@ -59,10 +59,13 @@ class System(object):
         gc.collect()
 
     def restart(self):
-        """アプリケーションの再起動を行う"""
+        """プロセスの再起動を行う"""
+        _args = sys.argv[:]
+        _args.insert(0, sys.executable)
+
         self.cleanup()
 
-        os.execv(sys.executable, ["python"] + sys.argv)
+        os.execv(sys.executable, _args)
 
 
 if __name__ == "__main__":
