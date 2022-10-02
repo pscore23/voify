@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import PySimpleGUI as sg
 
-from internal.static._common_func import _get_all_lib
+from internal._common_func import _get_all_lib
 
 sg.theme("DarkBlue3")
 
