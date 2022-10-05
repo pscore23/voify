@@ -45,6 +45,9 @@ class MainProcess:
                 case sg.WIN_CLOSED:
                     break
 
+                case "-START-":
+                    _lib = (lambda: values["-INPUT-"])()
+
                 case "-RESTART-":
                     self._system.restart()
 
