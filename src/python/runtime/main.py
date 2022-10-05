@@ -29,7 +29,7 @@ class MainProcess:
 
     def __init__(self) -> None:
         self._system: _System = _System()
-        self._window: Window = sg.Window("voify", LAYOUT, size=(600, 500), resizable=True, finalize=True)
+        self._window: Window = sg.Window("voify", LAYOUT, resizable=True, finalize=True)
 
         self._system.setup()
 
@@ -41,16 +41,18 @@ class MainProcess:
         while True:
             event, values = self._window.read()  # type: ignore
 
-            if event in (sg.WIN_CLOSED,):
-                break
+            match event:
+                case sg.WIN_CLOSED:
+                    break
 
-            if event == "-RESTART-":
-                self._system.restart()
+                case "-RESTART-":
+                    self._system.restart()
 
             self._window.refresh()
 
         self._window.close()
         self._system.cleanup()
+
         sys.exit()
 
 
