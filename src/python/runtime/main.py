@@ -3,7 +3,9 @@ from __future__ import absolute_import
 import gc
 import io
 import os
+import subprocess
 import sys
+from typing import Any
 
 try:
     import psutil
@@ -28,6 +30,8 @@ class MainProcess:
     """
 
     def __init__(self) -> None:
+        self.command: tuple = ("pip install", "pip uninstall")
+
         self._system: _System = _System()
         self._window: Window = sg.Window("voify", LAYOUT, resizable=True, finalize=True)
 
@@ -46,7 +50,12 @@ class MainProcess:
                     break
 
                 case "-START-":
-                    _lib = (lambda: values["-INPUT-"])()
+                    _lib = values["-INPUT-"]
+                    _select = values["-SELECT-"]
+
+                    match _select:
+                        case "アップデート":
+                            self.update(_lib)
 
                 case "-RESTART-":
                     self._system.restart()
@@ -57,6 +66,10 @@ class MainProcess:
         self._system.cleanup()
 
         sys.exit()
+
+    def update(self, lib: Any, all: bool = False):
+        if not all:
+            subprocess.run(f"{self.command[0]} --upgrade {lib}", check=True)
 
 
 class _System:
