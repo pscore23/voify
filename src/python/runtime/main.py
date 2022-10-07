@@ -5,6 +5,7 @@ import io
 import os
 import subprocess
 import sys
+import time
 from typing import Any
 
 try:
@@ -30,12 +31,11 @@ class MainProcess:
     """
 
     def __init__(self) -> None:
-        self.command: tuple = ("pip install", "pip uninstall")
+        self.lib: _Lib = _Lib()
+        self.system: _System = _System()
+        self.window: Window = sg.Window("voify", LAYOUT, resizable=True, finalize=True)
 
-        self._system: _System = _System()
-        self._window: Window = sg.Window("voify", LAYOUT, resizable=True, finalize=True)
-
-        self._system.setup()
+        self.system.setup()
 
     def run(self) -> None:
         """全ての処理を開始 (または終了) する:
@@ -43,33 +43,68 @@ class MainProcess:
                     - 入力されたデータの処理
         """
         while True:
-            event, values = self._window.read()  # type: ignore
+            event, values = self.window.read()  # type: ignore
 
             match event:
                 case sg.WIN_CLOSED:
                     break
 
                 case "-START-":
+                    _text = ("指定ライブラリを", "しています... (", "後にこのプロセスは再起動されます)")
                     _lib = values["-INPUT-"]
                     _select = values["-SELECT-"]
 
                     match _select:
                         case "アップデート":
-                            self.update(_lib)
+                            self.window["-OUTPUT-"].update(
+                                value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+
+                            self.window.refresh()
+
+                            self.lib.update(_lib)
+
+                        case "インストール":
+                            self.window["-OUTPUT-"].update(
+                                value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+
+                            self.window.refresh()
+
+                            self.lib.install(_lib)
+
+                        case "アンインストール":
+                            self.window["-OUTPUT-"].update(
+                                value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+
+                            self.window.refresh()
+
+                            self.lib.uninstall(_lib)
+
+                    self.system.restart()
 
                 case "-RESTART-":
-                    self._system.restart()
+                    self.system.restart()
 
-            self._window.refresh()
-
-        self._window.close()
-        self._system.cleanup()
+        self.window.close()
+        self.system.cleanup()
 
         sys.exit()
 
+
+class _Lib:
+    def __init__(self):
+        self.command: tuple = ("pip install", "pip uninstall")
+        self.option: tuple = ("-y", "--upgrade")
+
     def update(self, lib: Any, all: bool = False):
         if not all:
-            subprocess.run(f"{self.command[0]} --upgrade {lib}", check=True)
+            subprocess.run(f"{self.command[0]} {self.option[1]} {lib}", check=True)
+
+    def install(self, lib: Any):
+        subprocess.run(f"{self.command[0]} {lib}", check=True)
+
+    def uninstall(self, lib: Any, all: bool = False):
+        if not all:
+            subprocess.run(f"{self.command[1]} {lib} {self.option[0]}")
 
 
 class _System:
