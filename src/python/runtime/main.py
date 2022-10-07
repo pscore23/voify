@@ -5,7 +5,6 @@ import io
 import os
 import subprocess
 import sys
-import time
 from typing import Any
 
 try:
@@ -21,6 +20,7 @@ try:
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError("PySimpleGUI ライブラリが見つかりません") from e
 
+from internal._common_func import get_all_lib
 from internal.static.assets._layout import LAYOUT
 
 
@@ -54,32 +54,36 @@ class MainProcess:
                     _lib = values["-INPUT-"]
                     _select = values["-SELECT-"]
 
-                    match _select:
-                        case "アップデート":
-                            self.window["-OUTPUT-"].update(
-                                value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+                    if not _lib in get_all_lib():
+                        self.window["-OUTPUT-"].update(value="エラー: 指定されたライブラリが見つかりません")
 
-                            self.window.refresh()
+                    else:
+                        match _select:
+                            case "アップデート":
+                                self.window["-OUTPUT-"].update(
+                                    value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
 
-                            self.lib.update(_lib)
+                                self.window.refresh()
 
-                        case "インストール":
-                            self.window["-OUTPUT-"].update(
-                                value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+                                self.lib.update(_lib)
 
-                            self.window.refresh()
+                            case "インストール":
+                                self.window["-OUTPUT-"].update(
+                                    value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
 
-                            self.lib.install(_lib)
+                                self.window.refresh()
 
-                        case "アンインストール":
-                            self.window["-OUTPUT-"].update(
-                                value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+                                self.lib.install(_lib)
 
-                            self.window.refresh()
+                            case "アンインストール":
+                                self.window["-OUTPUT-"].update(
+                                    value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
 
-                            self.lib.uninstall(_lib)
+                                self.window.refresh()
 
-                    self.system.restart()
+                                self.lib.uninstall(_lib)
+
+                        self.system.restart()
 
                 case "-RESTART-":
                     self.system.restart()
