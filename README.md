@@ -1,0 +1,2 @@
+# voify
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d61b7dd2afbd4843905c53310aeaa216)](https://app.codacy.com/gh/pscore23/voify?utm_source=github.com&utm_medium=referral&utm_content=pscore23/voify&utm_campaign=Badge_Grade_Settings)
