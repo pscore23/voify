@@ -33,7 +33,7 @@ class MainProcess:
     def __init__(self) -> None:
         self.lib: _Lib = _Lib()
         self.system: _System = _System()
-        self.window: Window = sg.Window("voify", LAYOUT, resizable=True, finalize=True)
+        self.window: Window = sg.Window("voify", LAYOUT, size=(800, 600), resizable=True, finalize=True)
 
         self.system.setup()
 
@@ -54,7 +54,7 @@ class MainProcess:
                     _lib = values["-INPUT-"]
                     _select = values["-SELECT-"]
 
-                    if not _lib in get_all_lib():
+                    if not _lib in get_all_lib()[0]:
                         self.window["-OUTPUT-"].update(value="エラー: 指定されたライブラリが見つかりません")
 
                     else:
@@ -76,12 +76,18 @@ class MainProcess:
                                 self.lib.install(_lib)
 
                             case "アンインストール":
-                                self.window["-OUTPUT-"].update(
-                                    value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+                                if _lib in ("psutil", "PySimpleGUI"):
+                                    self.window["-OUTPUT-"].update(value="エラー: 指定されたライブラリはこのプロセスの依存ライブラリです")
 
-                                self.window.refresh()
+                                    self.window.refresh()
 
-                                self.lib.uninstall(_lib)
+                                else:
+                                    self.window["-OUTPUT-"].update(
+                                        value=f"{_text[0]} {_select} {_text[1]} {_select} {_text[2]}")
+
+                                    self.window.refresh()
+
+                                    self.lib.uninstall(_lib)
 
                         self.system.restart()
 
@@ -97,14 +103,14 @@ class MainProcess:
 class _Lib:
     def __init__(self):
         self.command: tuple = ("pip install", "pip uninstall")
-        self.option: tuple = ("-y", "--upgrade")
+        self.option: tuple = ("-y", "--upgrade", "--user")
 
     def update(self, lib: Any, all: bool = False):
         if not all:
-            subprocess.run(f"{self.command[0]} {self.option[1]} {lib}", check=True)
+            subprocess.run(f"{self.command[0]} {self.option[1]} {lib} {self.option[2]}", check=True)
 
     def install(self, lib: Any):
-        subprocess.run(f"{self.command[0]} {lib}", check=True)
+        subprocess.run(f"{self.command[0]} {lib} {self.option[2]}", check=True)
 
     def uninstall(self, lib: Any, all: bool = False):
         if not all:
