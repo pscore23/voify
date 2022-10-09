@@ -16,11 +16,25 @@ LAYOUT: list[list[Text] | list[Column] | list[Input | Text | Combo | Button] | l
 
     [sg.Text("名前 | バージョン".rjust(83, " "))],
 
-    [sg.Column([[sg.Input(name, disabled=True, text_color="Orange", background_color="White"), sg.Input(ver, disabled=True, text_color="Orange", background_color="White")] if require_update(name) else [sg.Input(name, disabled=True, text_color="Green",
-               background_color="White"), sg.Input(ver, disabled=True, text_color="Green", background_color="White")] for name, ver in zip(_LIB[0], _LIB[1])], scrollable=True)],
+    [sg.Column([[sg.Input(
+        name, disabled=True, text_color="Orange", background_color="White"
+    ), sg.Input(
+        f"{ver} (バージョン {require_update(name)[1]} にアップデート可能)", disabled=True, text_color="Orange", background_color="White"
+    )] if require_update(name)[0] else [sg.Input(
+        name, disabled=True, text_color="Green", background_color="White"
+    ), sg.Input(
+        ver, disabled=True, text_color="Green", background_color="White"
+    )] for name, ver in zip(_LIB[0], _LIB[1])], scrollable=True)],
 
-    [sg.Input(key="-INPUT-", pad=_PAD), sg.Text("を", pad=_PAD), sg.Combo(["アップデート", "インストール", "アンインストール"], "アップデート", size=(16, None), text_color="Blue",
-                                                                         button_arrow_color="Blue", key="-SELECT-", pad=_PAD, readonly=True), sg.Button("実行", button_color="Gray", pad=_PAD, key="-START-")],
+    [sg.Input(
+        key="-INPUT-", pad=_PAD
+    ), sg.Text(
+        "を", pad=_PAD
+    ), sg.Combo(
+        ["アップデート", "インストール", "アンインストール"], "アップデート", size=(16, None), text_color="Blue", button_arrow_color="Blue", key="-SELECT-", pad=_PAD, readonly=True
+    ), sg.Button(
+        "実行", button_color="Gray", pad=_PAD, key="-START-"
+    )],
 
     [sg.Text("入力待ちです...", background_color="Black", key="-OUTPUT-")],
 
