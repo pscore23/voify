@@ -28,5 +28,5 @@ def require_update(lib_name: Any) -> tuple[bool, Any]:
     return (bool(lib_name in _lib_dict.keys()), _lib_dict.get(lib_name))
 
 
-_UPDATE: list[dict[Any, Any]] = [{name.get("name"): name.get("latest_version")} for name in json.loads(
-    str(_run_command("pip list --outdated --format json")[0]))]
+_UPDATE: list[dict[Any, Any]] = (lambda: [{name.get("name"): name.get("latest_version")} for name in json.loads(
+    str(_run_command("pip list --outdated --format json")[0]))])()
