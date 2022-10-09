@@ -54,7 +54,7 @@ class MainProcess:
                     _lib = values["-INPUT-"]
                     _select = values["-SELECT-"]
 
-                    if not _lib in get_all_lib()[0]:
+                    if _lib not in get_all_lib()[0]:
                         self.window["-OUTPUT-"].update(value="エラー: 指定されたライブラリが見つかりません")
 
                     else:
