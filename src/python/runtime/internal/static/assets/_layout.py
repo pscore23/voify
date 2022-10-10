@@ -5,13 +5,16 @@ from PySimpleGUI import Button, Column, Combo, Input, Text
 
 from internal._common_func import get_all_lib, require_update
 
-sg.theme("DarkBlue3")
+
+def calc_layout() -> list[list[Text] | list[Column] | list[Input | Text | Combo | Button] | list[Button]]:
+    return _LAYOUT
+
 
 _PAD: tuple[tuple[int, int], tuple[int, int]] = ((5, 0), (30, 40))
 _LIB: tuple[list[str], list[str]] = get_all_lib()
 
 
-LAYOUT: list[list[Text] | list[Column] | list[Input | Text | Combo | Button] | list[Button]] = [
+_LAYOUT = [
     [sg.Text("インストール済みの pip ライブラリ:")],
 
     [sg.Text("名前 | バージョン".rjust(83, " "))],
