@@ -34,7 +34,7 @@ class MainProcess:
         self.lib: _Lib = _Lib()
         self.system: _System = _System()
         self.window: Window = sg.Window("voify", calc_layout(), auto_size_text=True,
-                                        auto_size_buttons=True, size=(800, 600), resizable=True, finalize=True)
+                                        auto_size_buttons=True, size=(800, 700), resizable=True, finalize=True)
 
         sg.theme("DarkBlue3")
 
@@ -104,18 +104,24 @@ class MainProcess:
 
 
 class _Lib:
+    """ライブラリの管理を行うクラス"""
+
     def __init__(self):
+        """コマンドの初期化など"""
         self.command: tuple = ("pip install", "pip uninstall")
         self.option: tuple = ("-y", "--upgrade", "--user")
 
     def update(self, lib: Any, all: bool = False):
+        """ライブラリのアップデート"""
         if not all:
             subprocess.run(f"{self.command[0]} {self.option[1]} {lib} {self.option[2]}", check=True)
 
     def install(self, lib: Any):
+        """ライブラリのインストール"""
         subprocess.run(f"{self.command[0]} {lib} {self.option[2]}", check=True)
 
     def uninstall(self, lib: Any, all: bool = False):
+        """ライブラリのアンインストール"""
         if not all:
             subprocess.run(f"{self.command[1]} {lib} {self.option[0]}")
 
