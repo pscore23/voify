@@ -21,7 +21,7 @@ except ModuleNotFoundError as e:
     raise ModuleNotFoundError("PySimpleGUI ライブラリが見つかりません") from e
 
 from internal._common_func import get_all_lib
-from internal.static.assets._layout import LAYOUT
+from internal.static.assets._layout import calc_layout
 
 
 class MainProcess:
@@ -33,7 +33,10 @@ class MainProcess:
     def __init__(self) -> None:
         self.lib: _Lib = _Lib()
         self.system: _System = _System()
-        self.window: Window = sg.Window("voify", LAYOUT, size=(800, 600), resizable=True, finalize=True)
+        self.window: Window = sg.Window("voify", calc_layout(), auto_size_text=True,
+                                        auto_size_buttons=True, size=(800, 600), resizable=True, finalize=True)
+
+        sg.theme("DarkBlue3")
 
         self.system.setup()
 
@@ -54,7 +57,7 @@ class MainProcess:
                     _lib = values["-INPUT-"]
                     _select = values["-SELECT-"]
 
-                    if _lib not in get_all_lib()[0]:
+                    if (_lib not in get_all_lib()[0]) and (not _select == "インストール"):
                         self.window["-OUTPUT-"].update(value="エラー: 指定されたライブラリが見つかりません")
 
                     else:
